@@ -74,7 +74,7 @@ reviewer_1.add_student_grade(student_1, 'Python', 8)
 reviewer_1.add_student_grade(student_1, 'Python', 6)
 
 student_1.add_lucturer_grade(lecturer_1, 'Python', 5)
-student_1.add_lucturer_grade(lecturer_1, 'Python', 10)
+student_1.add_lucturer_grade(lecturer_1, 'Python', 8)
 student_1.add_lucturer_grade(lecturer_1, 'Python', 10)
 
 print(student_1.grades)
