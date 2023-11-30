@@ -4,6 +4,27 @@ class SchoolMember:
         self.name = name
         self.surname = surname
 
+    def __lt__(self, other):
+        if (isinstance(self, Student) and isinstance(other, Student) or
+                isinstance(self, Lecturer) and isinstance(other, Lecturer)):
+            return self.avg_grade() < other.avg_grade()
+        else:
+            return 'Вы можете сравнить объекты только одного класса, у которых есть оценки'
+
+    def __gt__(self, other):
+        if (isinstance(self, Student) and isinstance(other, Student) or
+                isinstance(self, Lecturer) and isinstance(other, Lecturer)):
+            return self.avg_grade() > other.avg_grade()
+        else:
+            return 'Вы можете сравнить объекты только одного класса, у которых есть оценки'
+
+    def __eq__(self, other):
+        if (isinstance(self, Student) and isinstance(other, Student) or
+                isinstance(self, Lecturer) and isinstance(other, Lecturer)):
+            return self.avg_grade() == other.avg_grade()
+        else:
+            return 'Вы можете сравнить объекты только одного класса, у которых есть оценки'
+
     def avg_grade(self):
         if hasattr(self, 'grades'):
             self.__grades_list = []
@@ -12,42 +33,6 @@ class SchoolMember:
             return round(sum(self.__grades_list) / len(self.__grades_list), 2)
         else:
             return 'Нет оценок'
-
-    def __lt__(self, other):
-        if (isinstance(self, Student) and isinstance(other, Student) or
-            isinstance(self, Lecturer) and isinstance(other, Lecturer)):
-            if  self.avg_grade() < other.avg_grade():
-                return (f"Да, средняя оценка {self.name} {self.surname} "
-                        f"ниже средней оценки {other.name} {other.surname}")
-            else:
-                return (f"Нет, средняя оценка {self.name} {self.surname} "
-                        f"не ниже средней оценки {other.name} {other.surname}")
-        else:
-            return 'Вы можете сравнить объекты только одного класса, у которых есть оценки'
-
-    def __gt__(self, other):
-        if (isinstance(self, Student) and isinstance(other, Student) or
-            isinstance(self, Lecturer) and isinstance(other, Lecturer)):
-            if  self.avg_grade() > other.avg_grade():
-                return (f"Да, средняя оценка {self.name} {self.surname} "
-                        f"выше средней оценки {other.name} {other.surname}")
-            else:
-                return (f"Нет, средняя оценка {self.name} {self.surname} "
-                        f"не выше средней оценки {other.name} {other.surname}")
-        else:
-            return 'Вы можете сравнить объекты только одного класса, у которых есть оценки'
-
-    def __eq__(self, other):
-        if (isinstance(self, Student) and isinstance(other, Student) or
-            isinstance(self, Lecturer) and isinstance(other, Lecturer)):
-            if  self.avg_grade() == other.avg_grade():
-                return (f"Да, средняя оценка {self.name} {self.surname} "
-                        f"равна средней оценке {other.name} {other.surname}")
-            else:
-                return (f"Нет, средняя оценка {self.name} {self.surname} "
-                        f"не равна средней оценке {other.name} {other.surname}")
-        else:
-            return 'Вы можете сравнить объекты только одного класса, у которых есть оценки'
 
 
 class Student(SchoolMember):
@@ -64,7 +49,7 @@ class Student(SchoolMember):
 
     def add_lucturer_grade(self, lecturer, course, grade):
         if (isinstance(lecturer, Lecturer) and course in self.courses_in_progress and
-            course in lecturer.courses_attached):
+                course in lecturer.courses_attached):
             if course not in lecturer.grades:
                 lecturer.grades[course] = [grade]
             else:
@@ -101,7 +86,7 @@ class Reviewer(Teacher):
 
     def add_student_grade(self, student, course, grade):
         if (isinstance(student, Student) and course in self.courses_attached and
-            course in student.courses_in_progress):
+                course in student.courses_in_progress):
             if course not in student.grades:
                 student.grades[course] = [grade]
             else:
@@ -114,13 +99,13 @@ class Reviewer(Teacher):
 
 
 # Определение средней оценки каждого переданного студента в рамках курса
-def print_avg_student(students: list, course: str) -> str:
+def print_avg_student(students: list, course: str):
     grade_dict = {}
     for student in students:
         if isinstance(student, Student):
             if course in student.grades:
                 grade_dict[f'{student.name} {student.surname}'] = (
-                round(sum(student.grades[course]) / len(student.grades[course]), 2))
+                    round(sum(student.grades[course]) / len(student.grades[course]), 2))
             else:
                 print(f"У студента {student.name} {student.surname} нет оценок "
                       f"по курсу {course}")
@@ -131,13 +116,13 @@ def print_avg_student(students: list, course: str) -> str:
 
 
 # Определение средней оценки всех переданных студентов в рамках курса
-def print_avg_all_students(students: list, course: str) -> str:
+def print_avg_all_students(students: list, course: str):
     grade_dict = {}
     for student in students:
         if isinstance(student, Student):
             if course in student.grades:
                 grade_dict[f'{student.name} {student.surname}'] = (
-                round(sum(student.grades[course]) / len(student.grades[course]), 2))
+                    round(sum(student.grades[course]) / len(student.grades[course]), 2))
             else:
                 print(f"У студента {student.name} {student.surname} нет оценок "
                       f"по курсу {course}")
@@ -147,14 +132,15 @@ def print_avg_all_students(students: list, course: str) -> str:
     print(f'Средняя оценка студентов {', '.join(list(grade_dict.keys()))} '
           f'по курсу {course}: {avg_grade}')
 
+
 # Определение средней оценки каждого переданного лектора в рамках курса
-def print_avg_lecturer(lecturers: list, course: str) -> str:
+def print_avg_lecturer(lecturers: list, course: str):
     grade_dict = {}
     for lecturer in lecturers:
         if isinstance(lecturer, Lecturer):
             if course in lecturer.grades:
                 grade_dict[f'{lecturer.name} {lecturer.surname}'] = (
-                round(sum(lecturer.grades[course]) / len(lecturer.grades[course]), 2))
+                    round(sum(lecturer.grades[course]) / len(lecturer.grades[course]), 2))
             else:
                 print(f"У лектора {lecturer.name} {lecturer.surname} нет оценок "
                       f"по курсу {course}")
@@ -165,13 +151,13 @@ def print_avg_lecturer(lecturers: list, course: str) -> str:
 
 
 # Определение средней оценки всех переданных лекторов в рамках курса
-def print_avg_all_lecturers(lecturers: list, course: str) -> str:
+def print_avg_all_lecturers(lecturers: list, course: str):
     grade_dict = {}
     for lecturer in lecturers:
         if isinstance(lecturer, Lecturer):
             if course in lecturer.grades:
                 grade_dict[f'{lecturer.name} {lecturer.surname}'] = (
-                round(sum(lecturer.grades[course]) / len(lecturer.grades[course]), 2))
+                    round(sum(lecturer.grades[course]) / len(lecturer.grades[course]), 2))
             else:
                 print(f"У лектора {lecturer.name} {lecturer.surname} нет оценок "
                       f"по курсу {course}")
