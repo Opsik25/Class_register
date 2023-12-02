@@ -5,34 +5,40 @@ class SchoolMember:
         self.surname = surname
 
     def __lt__(self, other):
-        if (isinstance(self, Student) and isinstance(other, Student) or
-                isinstance(self, Lecturer) and isinstance(other, Lecturer)):
+        if ((isinstance(self, Student) and isinstance(other, Student) or
+                isinstance(self, Lecturer) and isinstance(other, Lecturer)) and
+                isinstance(self.avg_grade(), float) and isinstance(other.avg_grade(), float)):
             return self.avg_grade() < other.avg_grade()
         else:
             return 'Вы можете сравнить объекты только одного класса, у которых есть оценки'
 
     def __gt__(self, other):
-        if (isinstance(self, Student) and isinstance(other, Student) or
-                isinstance(self, Lecturer) and isinstance(other, Lecturer)):
+        if ((isinstance(self, Student) and isinstance(other, Student) or
+                isinstance(self, Lecturer) and isinstance(other, Lecturer)) and
+                isinstance(self.avg_grade(), float) and isinstance(other.avg_grade(), float)):
             return self.avg_grade() > other.avg_grade()
         else:
             return 'Вы можете сравнить объекты только одного класса, у которых есть оценки'
 
     def __eq__(self, other):
-        if (isinstance(self, Student) and isinstance(other, Student) or
-                isinstance(self, Lecturer) and isinstance(other, Lecturer)):
+        if ((isinstance(self, Student) and isinstance(other, Student) or
+                isinstance(self, Lecturer) and isinstance(other, Lecturer)) and
+                isinstance(self.avg_grade(), float) and isinstance(self.avg_grade(), float)):
             return self.avg_grade() == other.avg_grade()
         else:
             return 'Вы можете сравнить объекты только одного класса, у которых есть оценки'
 
     def avg_grade(self):
         if hasattr(self, 'grades'):
-            self.__grades_list = []
-            for el in self.grades.values():
-                self.__grades_list.extend(el)
-            return round(sum(self.__grades_list) / len(self.__grades_list), 2)
+            if len(self.grades) > 0:
+                self.__grades_list = []
+                for el in self.grades.values():
+                    self.__grades_list.extend(el)
+                return round(sum(self.__grades_list) / len(self.__grades_list), 2)
+            else:
+                return f'У {self.name} {self.surname} пока нет оценок'
         else:
-            return 'Нет оценок'
+            return 'Оценки есть только у студентов и лекторов'
 
 
 class Student(SchoolMember):
@@ -47,15 +53,16 @@ class Student(SchoolMember):
     def add_courses_finished(self, course_finished_name):
         self.courses_finished.append(course_finished_name)
 
-    def add_lucturer_grade(self, lecturer, course, grade):
+    def add_lecturer_grade(self, lecturer, course, grade):
         if (isinstance(lecturer, Lecturer) and course in self.courses_in_progress and
-                course in lecturer.courses_attached):
+                course in lecturer.courses_attached) and 0 < grade <= 10 and isinstance(grade, int):
             if course not in lecturer.grades:
                 lecturer.grades[course] = [grade]
             else:
                 lecturer.grades[course].append(grade)
+            print('Оценка успешно добавлена')
         else:
-            return 'Ошибка'
+            print('Ошибка. Проверьте правильность внесенных данных и попробуйте еще раз')
 
     def __str__(self):
         return (f"Имя: {self.name}\nФамилия: {self.surname}\n"
@@ -86,13 +93,14 @@ class Reviewer(Teacher):
 
     def add_student_grade(self, student, course, grade):
         if (isinstance(student, Student) and course in self.courses_attached and
-                course in student.courses_in_progress):
+                course in student.courses_in_progress) and 0 < grade <= 10 and isinstance(grade, int):
             if course not in student.grades:
                 student.grades[course] = [grade]
             else:
                 student.grades[course].append(grade)
+            print('Оценка успешно добавлена')
         else:
-            return 'Ошибка'
+            print('Ошибка. Проверьте правильность внесенных данных и попробуйте еще раз')
 
     def __str__(self):
         return f"Имя: {self.name}\nФамилия: {self.surname}"
@@ -220,17 +228,23 @@ lecturer_3.grades['Python'] = [10, 10, 8]
 lecturer_4 = Lecturer('Nils', 'Nicklson')
 lecturer_4.courses_attached.append('Java')
 lecturer_4.courses_attached.append('Git')
-lecturer_4.grades['Git'] = [10, 10, 10, 7]
-lecturer_4.grades['Java'] = [10, 10, 8]
 
-reviewer_1.add_student_grade(student_1, 'Python', 7)
-reviewer_1.add_student_grade(student_1, 'Python', 8)
+
+reviewer_1.add_student_grade(student_1, 'Python', 10)
+reviewer_1.add_student_grade(student_1, 'Python', 10)
 
 reviewer_2.add_student_grade(student_2, 'Python', 10)
 reviewer_2.add_student_grade(student_2, 'Python', 5)
 
-student_1.add_lucturer_grade(lecturer_1, 'Python', 8)
-student_1.add_lucturer_grade(lecturer_1, 'Python', 10)
+student_1.add_lecturer_grade(lecturer_1, 'Python', 8)
+student_1.add_lecturer_grade(lecturer_1, 'Python', 10)
+
+print(lecturer_4.avg_grade())
+print(lecturer_4 == lecturer_1)
+
+print(lecturer_4)
+
+print(student_1.grades)
 
 print(student_1.grades)
 print(lecturer_1.grades)
@@ -238,6 +252,7 @@ print(lecturer_1.grades)
 print(lecturer_1.avg_grade())
 print(reviewer_1.avg_grade())
 
+print(student_1)
 print(reviewer_1)
 print(lecturer_1)
 print(student_2)
