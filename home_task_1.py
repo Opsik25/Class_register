@@ -106,8 +106,8 @@ class Reviewer(Teacher):
         return f"Имя: {self.name}\nФамилия: {self.surname}"
 
 
-# Определение средней оценки каждого переданного студента в рамках курса
 def print_avg_student(students: list, course: str):
+    """Print average grade for each given student"""
     grade_dict = {}
     for student in students:
         if isinstance(student, Student):
@@ -123,8 +123,8 @@ def print_avg_student(students: list, course: str):
         print(f'Средняя оценка {name} по курсу {course}: {avg_grade}')
 
 
-# Определение средней оценки всех переданных студентов в рамках курса
 def print_avg_all_students(students: list, course: str):
+    """Print average grade for all given students together"""
     grade_dict = {}
     for student in students:
         if isinstance(student, Student):
@@ -141,8 +141,8 @@ def print_avg_all_students(students: list, course: str):
           f'по курсу {course}: {avg_grade}')
 
 
-# Определение средней оценки каждого переданного лектора в рамках курса
 def print_avg_lecturer(lecturers: list, course: str):
+    """Print average grade for each given lecturer"""
     grade_dict = {}
     for lecturer in lecturers:
         if isinstance(lecturer, Lecturer):
@@ -158,8 +158,8 @@ def print_avg_lecturer(lecturers: list, course: str):
         print(f'Средняя оценка {name} по курсу {course}: {avg_grade}')
 
 
-# Определение средней оценки всех переданных лекторов в рамках курса
 def print_avg_all_lecturers(lecturers: list, course: str):
+    """Print average grade for all given lecturers together"""
     grade_dict = {}
     for lecturer in lecturers:
         if isinstance(lecturer, Lecturer):
